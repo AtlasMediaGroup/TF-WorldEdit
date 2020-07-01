@@ -50,6 +50,11 @@ public class BlockCategoryPatternParser extends InputParser<Pattern> {
             return null;
         }
         String tag = input.substring(2).toLowerCase(Locale.ROOT);
+
+        if (tag.equals("dragon_immune")) {
+            throw new InputParseException(tag);
+        }
+
         boolean anyState = false;
         if (tag.startsWith("*")) {
             tag = tag.substring(1);
