@@ -103,8 +103,6 @@ public abstract class ArbitraryBiomeShape {
     public int generate(EditSession editSession, BiomeType baseBiome, boolean hollow) {
         int affected = 0;
 
-        boolean fullySupports3DBiomes = editSession.fullySupports3DBiomes();
-
         for (BlockVector3 position : getExtent()) {
             int x = position.getBlockX();
             int y = position.getBlockY();
@@ -113,9 +111,6 @@ public abstract class ArbitraryBiomeShape {
             if (!hollow) {
                 final BiomeType material = getBiome(x, y, z, baseBiome);
                 if (material != null) {
-                    if (!fullySupports3DBiomes) {
-                        position = position.withY(0);
-                    }
                     editSession.getWorld().setBiome(position, material);
                     ++affected;
                 }
@@ -130,10 +125,6 @@ public abstract class ArbitraryBiomeShape {
 
             if (!shouldDraw(x, y, z, material)) {
                 continue;
-            }
-
-            if (!fullySupports3DBiomes) {
-                position = position.withY(0);
             }
 
             editSession.getWorld().setBiome(position, material);

@@ -58,10 +58,10 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 
-import javax.annotation.Nullable;
 import java.io.IOException;
 import java.util.Locale;
 import java.util.UUID;
+import javax.annotation.Nullable;
 
 public class FabricPlayer extends AbstractPlayerActor {
 
@@ -139,6 +139,7 @@ public class FabricPlayer extends AbstractPlayerActor {
     }
 
     @Override
+    @Deprecated
     public void printRaw(String msg) {
         for (String part : msg.split("\n")) {
             this.player.sendMessage(new LiteralText(part), false);
@@ -146,16 +147,19 @@ public class FabricPlayer extends AbstractPlayerActor {
     }
 
     @Override
+    @Deprecated
     public void printDebug(String msg) {
         sendColorized(msg, Formatting.GRAY);
     }
 
     @Override
+    @Deprecated
     public void print(String msg) {
         sendColorized(msg, Formatting.LIGHT_PURPLE);
     }
 
     @Override
+    @Deprecated
     public void printError(String msg) {
         sendColorized(msg, Formatting.RED);
     }
@@ -174,8 +178,9 @@ public class FabricPlayer extends AbstractPlayerActor {
     }
 
     @Override
-    public void setPosition(Vector3 pos, float pitch, float yaw) {
+    public boolean trySetPosition(Vector3 pos, float pitch, float yaw) {
         this.player.networkHandler.requestTeleport(pos.getX(), pos.getY(), pos.getZ(), yaw, pitch);
+        return true;
     }
 
     @Override

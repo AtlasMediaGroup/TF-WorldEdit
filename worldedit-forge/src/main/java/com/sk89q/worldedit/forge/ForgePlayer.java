@@ -58,10 +58,10 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
 
-import javax.annotation.Nullable;
 import java.io.IOException;
 import java.util.Locale;
 import java.util.UUID;
+import javax.annotation.Nullable;
 
 public class ForgePlayer extends AbstractPlayerActor {
 
@@ -138,6 +138,7 @@ public class ForgePlayer extends AbstractPlayerActor {
     }
 
     @Override
+    @Deprecated
     public void printRaw(String msg) {
         for (String part : msg.split("\n")) {
             sendMessage(new StringTextComponent(part));
@@ -145,16 +146,19 @@ public class ForgePlayer extends AbstractPlayerActor {
     }
 
     @Override
+    @Deprecated
     public void printDebug(String msg) {
         sendColorized(msg, TextFormatting.GRAY);
     }
 
     @Override
+    @Deprecated
     public void print(String msg) {
         sendColorized(msg, TextFormatting.LIGHT_PURPLE);
     }
 
     @Override
+    @Deprecated
     public void printError(String msg) {
         sendColorized(msg, TextFormatting.RED);
     }
@@ -173,8 +177,9 @@ public class ForgePlayer extends AbstractPlayerActor {
     }
 
     @Override
-    public void setPosition(Vector3 pos, float pitch, float yaw) {
+    public boolean trySetPosition(Vector3 pos, float pitch, float yaw) {
         this.player.connection.setPlayerLocation(pos.getX(), pos.getY(), pos.getZ(), yaw, pitch);
+        return true;
     }
 
     @Override

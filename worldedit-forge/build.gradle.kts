@@ -1,11 +1,12 @@
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 import net.minecraftforge.gradle.common.util.RunConfig
-import net.minecraftforge.gradle.userdev.UserDevExtension
 import net.minecraftforge.gradle.mcp.task.GenerateSRG
+import net.minecraftforge.gradle.userdev.UserDevExtension
 import net.minecraftforge.gradle.userdev.tasks.RenameJarInPlace
 
 plugins {
     id("net.minecraftforge.gradle")
+    `java-library`
 }
 
 applyPlatformAndCoreConfiguration()
@@ -25,8 +26,8 @@ configurations.all {
 }
 
 dependencies {
-    "compile"(project(":worldedit-core"))
-    "compile"("org.apache.logging.log4j:log4j-slf4j-impl:2.11.2")
+    "api"(project(":worldedit-core"))
+    "implementation"("org.apache.logging.log4j:log4j-slf4j-impl:2.11.2")
 
     "minecraft"("net.minecraftforge:forge:$minecraftVersion-$forgeVersion")
 }

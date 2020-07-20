@@ -30,7 +30,6 @@ import com.sk89q.worldedit.command.util.CommandPermissionsConditionGenerator;
 import com.sk89q.worldedit.command.util.HookMode;
 import com.sk89q.worldedit.command.util.WorldEditAsyncCommandBuilder;
 import com.sk89q.worldedit.entity.Player;
-import com.sk89q.worldedit.extension.input.DisallowedUsageException;
 import com.sk89q.worldedit.extension.platform.Actor;
 import com.sk89q.worldedit.extension.platform.Capability;
 import com.sk89q.worldedit.function.mask.Mask;
@@ -38,6 +37,7 @@ import com.sk89q.worldedit.internal.command.CommandRegistrationHandler;
 import com.sk89q.worldedit.internal.command.CommandUtil;
 import com.sk89q.worldedit.util.SideEffect;
 import com.sk89q.worldedit.util.SideEffectSet;
+import com.sk89q.worldedit.util.auth.AuthorizationException;
 import com.sk89q.worldedit.util.formatting.component.PaginationBox;
 import com.sk89q.worldedit.util.formatting.component.SideEffectBox;
 import com.sk89q.worldedit.util.formatting.text.Component;
@@ -92,8 +92,8 @@ public class GeneralCommands {
             if (command.getName().equals("/fast")) {
                 // deprecate to `//perf`
                 commandManager.register(CommandUtil.deprecate(
-                    command, "//fast duplicates //perf " +
-                        "and will be removed in WorldEdit 8",
+                    command, "//fast duplicates //perf "
+                        + "and will be removed in WorldEdit 8",
                     GeneralCommands::replaceFastForPerf
                 ));
                 continue;
@@ -110,8 +110,8 @@ public class GeneralCommands {
         }
         ImmutableList<String> args = oldParams.getMetadata().getArguments();
         if (args.isEmpty()) {
-            return TextComponent.of("There is not yet a replacement for //fast" +
-                " with no arguments");
+            return TextComponent.of("There is not yet a replacement for //fast"
+                + " with no arguments");
         }
         String arg0 = args.get(0).toLowerCase(Locale.ENGLISH);
         String flipped;
@@ -200,7 +200,7 @@ public class GeneralCommands {
         desc = "Toggle fast mode"
     )
     @CommandPermissions("worldedit.fast")
-    @Deprecated
+    @SuppressWarnings("deprecation")
     void fast(Actor actor, LocalSession session,
               @Arg(desc = "The new fast mode state", def = "")
                   Boolean fastMode) {
@@ -222,8 +222,8 @@ public class GeneralCommands {
     @Command(
         name = "/perf",
         desc = "Toggle side effects for performance",
-        descFooter = "Note that this command is GOING to change in the future." +
-            " Do not depend on the exact format of this command yet."
+        descFooter = "Note that this command is GOING to change in the future."
+            + " Do not depend on the exact format of this command yet."
     )
     @CommandPermissions("worldedit.perf")
     void perf(Actor actor, LocalSession session,
@@ -307,7 +307,7 @@ public class GeneralCommands {
                               @Arg(desc = "The new draw selection state", def = "")
                                   Boolean drawSelection) throws WorldEditException {
         if (!WorldEdit.getInstance().getConfiguration().serverSideCUI) {
-            throw new DisallowedUsageException("This functionality is disabled in the configuration!");
+            throw new AuthorizationException(TranslatableComponent.of("worldedit.error.disabled"));
         }
         boolean useServerCui = session.shouldUseServerCUI();
         if (drawSelection != null && drawSelection == useServerCui) {
@@ -344,8 +344,8 @@ public class GeneralCommands {
     @Command(
         name = "/watchdog",
         desc = "Changes watchdog hook state.",
-        descFooter = "This is dependent on platform implementation. " +
-            "Not all platforms support watchdog hooks, or contain a watchdog."
+        descFooter = "This is dependent on platform implementation. "
+            + "Not all platforms support watchdog hooks, or contain a watchdog."
     )
     @CommandPermissions("worldedit.watchdog")
     public void watchdog(Actor actor, LocalSession session,

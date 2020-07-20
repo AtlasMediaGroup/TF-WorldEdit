@@ -17,19 +17,22 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.sk89q.worldedit.bukkit;
+package com.sk89q.worldedit.internal.annotation;
 
-import com.sk89q.worldedit.WorldEditException;
+import com.sk89q.worldedit.entity.Player;
+import org.enginehub.piston.inject.InjectAnnotation;
+
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
- * Thrown if the world has been unloaded.
+ * Annotates a parameter to indicate it as optional. This is really a bit of a hack, used to
+ * get a {@link Player} or {@code null} instead of throwing.
  */
-class WorldUnloadedException extends WorldEditException {
-
-    /**
-     * Create a new instance.
-     */
-    WorldUnloadedException() {
-        super("The world was unloaded already");
-    }
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.PARAMETER)
+@InjectAnnotation
+public @interface OptionalArg {
 }
