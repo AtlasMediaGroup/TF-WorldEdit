@@ -3,18 +3,18 @@
  * Copyright (C) sk89q <http://www.sk89q.com>
  * Copyright (C) WorldEdit team and contributors
  *
- * This program is free software: you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as published by the
- * Free Software Foundation, either version 3 of the License, or
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
- * FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License
- * for more details.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 package com.sk89q.worldedit.command;
@@ -447,8 +447,10 @@ public class RegionCommands {
                           List<String> expression,
                       @Switch(name = 'r', desc = "Use the game's coordinate origin")
                           boolean useRawCoords,
-                      @Switch(name = 'o', desc = "Use the selection's center as origin")
-                          boolean offset) throws WorldEditException {
+                      @Switch(name = 'o', desc = "Use the placement's coordinate origin")
+                          boolean offset,
+                      @Switch(name = 'c', desc = "Use the selection's center as origin")
+                          boolean offsetCenter) throws WorldEditException {
         final Vector3 zero;
         Vector3 unit;
 
@@ -457,6 +459,12 @@ public class RegionCommands {
             unit = Vector3.ONE;
         } else if (offset) {
             zero = session.getPlacementPosition(actor).toVector3();
+            unit = Vector3.ONE;
+        } else if (offsetCenter) {
+            final Vector3 min = region.getMinimumPoint().toVector3();
+            final Vector3 max = region.getMaximumPoint().toVector3();
+
+            zero = max.add(min).multiply(0.5);
             unit = Vector3.ONE;
         } else {
             final Vector3 min = region.getMinimumPoint().toVector3();

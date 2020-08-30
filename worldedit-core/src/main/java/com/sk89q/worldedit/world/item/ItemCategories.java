@@ -3,18 +3,18 @@
  * Copyright (C) sk89q <http://www.sk89q.com>
  * Copyright (C) WorldEdit team and contributors
  *
- * This program is free software: you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as published by the
- * Free Software Foundation, either version 3 of the License, or
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
- * FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License
- * for more details.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 package com.sk89q.worldedit.world.item;
@@ -44,7 +44,7 @@ public final class ItemCategories {
     public static final ItemCategory FENCES = get("minecraft:fences");
     public static final ItemCategory FISHES = get("minecraft:fishes");
     public static final ItemCategory FLOWERS = get("minecraft:flowers");
-    public static final ItemCategory FURNACE_MATERIALS = get("minecraft:furnace_materials");
+    @Deprecated public static final ItemCategory FURNACE_MATERIALS = get("minecraft:furnace_materials");
     public static final ItemCategory GOLD_ORES = get("minecraft:gold_ores");
     public static final ItemCategory JUNGLE_LOGS = get("minecraft:jungle_logs");
     public static final ItemCategory LEAVES = get("minecraft:leaves");
@@ -67,6 +67,7 @@ public final class ItemCategories {
     public static final ItemCategory SPRUCE_LOGS = get("minecraft:spruce_logs");
     public static final ItemCategory STAIRS = get("minecraft:stairs");
     public static final ItemCategory STONE_BRICKS = get("minecraft:stone_bricks");
+    public static final ItemCategory STONE_CRAFTING_MATERIALS = get("minecraft:stone_crafting_materials");
     public static final ItemCategory STONE_TOOL_MATERIALS = get("minecraft:stone_tool_materials");
     public static final ItemCategory TALL_FLOWERS = get("minecraft:tall_flowers");
     public static final ItemCategory TRAPDOORS = get("minecraft:trapdoors");

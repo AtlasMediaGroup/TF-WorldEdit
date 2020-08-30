@@ -3,18 +3,18 @@
  * Copyright (C) sk89q <http://www.sk89q.com>
  * Copyright (C) WorldEdit team and contributors
  *
- * This program is free software: you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as published by the
- * Free Software Foundation, either version 3 of the License, or
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
- * FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License
- * for more details.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 package com.sk89q.worldedit;
@@ -38,11 +38,13 @@ import com.sk89q.worldedit.extension.factory.MaskFactory;
 import com.sk89q.worldedit.extension.factory.PatternFactory;
 import com.sk89q.worldedit.extension.platform.Actor;
 import com.sk89q.worldedit.extension.platform.Capability;
+import com.sk89q.worldedit.extension.platform.Locatable;
 import com.sk89q.worldedit.extension.platform.Platform;
 import com.sk89q.worldedit.extension.platform.PlatformManager;
 import com.sk89q.worldedit.extent.inventory.BlockBag;
 import com.sk89q.worldedit.function.mask.Mask;
 import com.sk89q.worldedit.function.pattern.Pattern;
+import com.sk89q.worldedit.internal.SchematicsEventListener;
 import com.sk89q.worldedit.internal.expression.invoke.ReturnException;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.scripting.CraftScriptContext;
@@ -64,6 +66,7 @@ import com.sk89q.worldedit.util.io.file.InvalidFilenameException;
 import com.sk89q.worldedit.util.task.SimpleSupervisor;
 import com.sk89q.worldedit.util.task.Supervisor;
 import com.sk89q.worldedit.util.translation.TranslationManager;
+import com.sk89q.worldedit.world.World;
 import com.sk89q.worldedit.world.block.BlockStateHolder;
 import com.sk89q.worldedit.world.block.BlockType;
 import com.sk89q.worldedit.world.registry.BundledBlockData;
@@ -113,7 +116,8 @@ public final class WorldEdit {
 
     private final EventBus eventBus = new EventBus();
     private final PlatformManager platformManager = new PlatformManager(this);
-    private final EditSessionFactory editSessionFactory = new EditSessionFactory.EditSessionFactoryImpl(eventBus);
+    @Deprecated
+    private final EditSessionFactory editSessionFactory = new EditSessionFactory.EditSessionFactoryImpl();
     private final SessionManager sessions = new SessionManager(this);
     private final ListeningExecutorService executorService = MoreExecutors.listeningDecorator(
             EvenMoreExecutors.newBoundedCachedThreadPool(0, 1, 20, "WorldEdit Task Executor - %s"));
@@ -133,6 +137,7 @@ public final class WorldEdit {
     }
 
     private WorldEdit() {
+        eventBus.register(new SchematicsEventListener());
     }
 
     /**
@@ -423,14 +428,27 @@ public final class WorldEdit {
      *
      * @param path the subpath under the working directory
      * @return a working directory
+     * @deprecated Use {@link WorldEdit#getWorkingDirectoryPath(String)} instead
      */
+    @Deprecated
     public File getWorkingDirectoryFile(String path) {
-        File f = new File(path);
-        if (f.isAbsolute()) {
-            return f;
+        return getWorkingDirectoryPath(path).toFile();
+    }
+
+    /**
+     * Get a file relative to the defined working directory. If the specified
+     * path is absolute, then the working directory is not used.
+     *
+     * @param path the subpath under the working directory
+     * @return a working directory
+     */
+    public Path getWorkingDirectoryPath(String path) {
+        Path p = Paths.get(path);
+        if (p.isAbsolute()) {
+            return p;
         }
 
-        return new File(getConfiguration().getWorkingDirectory(), path);
+        return getConfiguration().getWorkingDirectoryPath().resolve(path);
     }
 
     /**
@@ -744,7 +762,7 @@ public final class WorldEdit {
             logger.warn("Failed to execute script", e);
         } finally {
             for (EditSession editSession : scriptContext.getEditSessions()) {
-                editSession.flushSession();
+                editSession.close();
                 session.remember(editSession);
             }
         }
@@ -761,9 +779,39 @@ public final class WorldEdit {
 
     /**
      * Get a factory for {@link EditSession}s.
+     *
+     * @deprecated Use {@link #newEditSessionBuilder()} instead. See {@link EditSessionFactory} for details.
      */
+    @Deprecated
     public EditSessionFactory getEditSessionFactory() {
         return editSessionFactory;
+    }
+
+    /**
+     * Create a builder for {@link EditSession}s.
+     */
+    public EditSessionBuilder newEditSessionBuilder() {
+        return new EditSessionBuilder(eventBus);
+    }
+
+    /**
+     * Shorthand for {@code newEditSessionBuilder().world(world).build()}.
+     *
+     * @param world the world
+     * @return the new {@link EditSession}
+     */
+    public EditSession newEditSession(@Nullable World world) {
+        return newEditSessionBuilder().world(world).build();
+    }
+
+    /**
+     * Shorthand for {@code newEditSessionBuilder().locatableActor(locatableActor).build()}.
+     *
+     * @param locatableActor the actor
+     * @return the new {@link EditSession}
+     */
+    public <A extends Actor & Locatable> EditSession newEditSession(A locatableActor) {
+        return newEditSessionBuilder().locatableActor(locatableActor).build();
     }
 
     /**

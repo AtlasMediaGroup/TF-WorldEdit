@@ -3,18 +3,18 @@
  * Copyright (C) sk89q <http://www.sk89q.com>
  * Copyright (C) WorldEdit team and contributors
  *
- * This program is free software: you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as published by the
- * Free Software Foundation, either version 3 of the License, or
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
- * FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License
- * for more details.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 package com.sk89q.worldedit.world.block;
@@ -30,6 +30,8 @@ public final class BlockCategories {
     public static final BlockCategory ANVIL = get("minecraft:anvil");
     public static final BlockCategory BAMBOO_PLANTABLE_ON = get("minecraft:bamboo_plantable_on");
     public static final BlockCategory BANNERS = get("minecraft:banners");
+    public static final BlockCategory BASE_STONE_NETHER = get("minecraft:base_stone_nether");
+    public static final BlockCategory BASE_STONE_OVERWORLD = get("minecraft:base_stone_overworld");
     public static final BlockCategory BEACON_BASE_BLOCKS = get("minecraft:beacon_base_blocks");
     public static final BlockCategory BEDS = get("minecraft:beds");
     public static final BlockCategory BEE_GROWABLES = get("minecraft:bee_growables");
@@ -66,6 +68,7 @@ public final class BlockCategories {
     public static final BlockCategory LEAVES = get("minecraft:leaves");
     public static final BlockCategory LOGS = get("minecraft:logs");
     public static final BlockCategory LOGS_THAT_BURN = get("minecraft:logs_that_burn");
+    public static final BlockCategory MUSHROOM_GROW_BLOCK = get("minecraft:mushroom_grow_block");
     public static final BlockCategory NON_FLAMMABLE_WOOD = get("minecraft:non_flammable_wood");
     public static final BlockCategory NYLIUM = get("minecraft:nylium");
     public static final BlockCategory OAK_LOGS = get("minecraft:oak_logs");

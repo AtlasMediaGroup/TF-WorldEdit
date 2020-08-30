@@ -3,18 +3,18 @@
  * Copyright (C) sk89q <http://www.sk89q.com>
  * Copyright (C) WorldEdit team and contributors
  *
- * This program is free software: you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as published by the
- * Free Software Foundation, either version 3 of the License, or
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
- * FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License
- * for more details.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 package com.sk89q.worldedit.blocks;
@@ -22,6 +22,7 @@ package com.sk89q.worldedit.blocks;
 import com.sk89q.jnbt.CompoundTag;
 import com.sk89q.jnbt.StringTag;
 import com.sk89q.jnbt.Tag;
+import com.sk89q.worldedit.internal.util.DeprecationUtil;
 import com.sk89q.worldedit.world.block.BaseBlock;
 import com.sk89q.worldedit.world.block.BlockState;
 
@@ -94,7 +95,7 @@ public class SkullBlock extends BaseBlock {
         Map<String, Tag> values = new HashMap<>();
         Map<String, Tag> inner = new HashMap<>();
         inner.put("Name", new StringTag(owner));
-        values.put("Owner", new CompoundTag(inner));
+        values.put(DeprecationUtil.getHeadOwnerKey(), new CompoundTag(inner));
         return new CompoundTag(values);
     }
 
@@ -113,7 +114,7 @@ public class SkullBlock extends BaseBlock {
             throw new RuntimeException(String.format("'%s' tile entity expected", getNbtId()));
         }
 
-        t = values.get("Owner");
+        t = values.get(DeprecationUtil.getHeadOwnerKey());
         if (t instanceof CompoundTag) {
             setOwner(((CompoundTag) t).getValue().get("Name").getValue().toString());
         }

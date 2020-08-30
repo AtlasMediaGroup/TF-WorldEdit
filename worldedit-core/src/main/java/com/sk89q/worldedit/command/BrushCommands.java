@@ -3,18 +3,18 @@
  * Copyright (C) sk89q <http://www.sk89q.com>
  * Copyright (C) WorldEdit team and contributors
  *
- * This program is free software: you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as published by the
- * Free Software Foundation, either version 3 of the License, or
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
- * FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License
- * for more details.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 package com.sk89q.worldedit.command;
@@ -44,6 +44,7 @@ import com.sk89q.worldedit.extent.clipboard.Clipboard;
 import com.sk89q.worldedit.function.Contextual;
 import com.sk89q.worldedit.function.factory.ApplyLayer;
 import com.sk89q.worldedit.function.factory.ApplyRegion;
+import com.sk89q.worldedit.function.factory.BiomeFactory;
 import com.sk89q.worldedit.function.factory.Deform;
 import com.sk89q.worldedit.function.factory.Paint;
 import com.sk89q.worldedit.function.factory.Snow;
@@ -62,6 +63,7 @@ import com.sk89q.worldedit.util.HandSide;
 import com.sk89q.worldedit.util.TreeGenerator;
 import com.sk89q.worldedit.util.formatting.text.TextComponent;
 import com.sk89q.worldedit.util.formatting.text.TranslatableComponent;
+import com.sk89q.worldedit.world.biome.BiomeType;
 import com.sk89q.worldedit.world.block.BlockTypes;
 import org.enginehub.piston.annotation.Command;
 import org.enginehub.piston.annotation.CommandContainer;
@@ -431,6 +433,24 @@ public class BrushCommands {
 
         setOperationBasedBrush(player, localSession, radius,
             new ApplyLayer(new Snow(stack)), shape, "worldedit.brush.snow");
+    }
+
+    @Command(
+        name = "biome",
+        desc = "Biome brush, sets biomes in the area"
+    )
+    @CommandPermissions("worldedit.brush.biome")
+    public void biome(Player player, LocalSession localSession,
+                      @Arg(desc = "The shape of the region")
+                          RegionFactory shape,
+                      @Arg(desc = "The size of the brush", def = "5")
+                          double radius,
+                      @Arg(desc = "The biome type")
+                          BiomeType biomeType) throws WorldEditException {
+
+        setOperationBasedBrush(player, localSession, radius,
+            new ApplyRegion(new BiomeFactory(biomeType)), shape, "worldedit.brush.biome");
+        player.printInfo(TranslatableComponent.of("worldedit.setbiome.warning"));
     }
 
     static void setOperationBasedBrush(Player player, LocalSession session, double radius,
