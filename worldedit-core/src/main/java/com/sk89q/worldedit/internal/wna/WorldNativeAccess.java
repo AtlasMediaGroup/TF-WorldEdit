@@ -59,8 +59,8 @@ public interface WorldNativeAccess<NC, NBS, NP> {
         if (sideEffects.shouldApply(SideEffect.VALIDATION)) {
             newState = getValidBlockForPosition(newState, pos);
         }
-        NBS successState = setBlockState(chunk, pos, newState);
-        boolean successful = successState != null;
+        NBS lastValue = setBlockState(chunk, pos, newState);
+        boolean successful = lastValue != null;
 
         // Create the TileEntity
         if (successful || old == newState) {
@@ -178,12 +178,12 @@ public interface WorldNativeAccess<NC, NBS, NP> {
         }
 
         // Make connection updates optional
-        if (sideEffectSet.shouldApply(SideEffect.VALIDATION)) {
+        if (sideEffectSet.shouldApply(SideEffect.NEIGHBORS)) {
             updateNeighbors(pos, oldState, newState, 512);
         }
 
         // Seems used only for PoI updates
-        onBlockStateChange(pos, oldState, newState);
+        onBlockStateChange(pos, oldState, blockState1);
     }
 
 }
