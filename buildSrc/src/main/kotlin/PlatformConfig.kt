@@ -113,6 +113,8 @@ fun Project.applyShadowConfiguration() {
         exclude(".cache")
         exclude("LICENSE*")
         exclude("META-INF/maven/**")
+        // it's in the i18n zip, we only use it in dev
+        exclude("**/lang/strings.json")
         minimize()
     }
 }

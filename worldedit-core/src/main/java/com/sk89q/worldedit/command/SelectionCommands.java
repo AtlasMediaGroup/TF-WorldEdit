@@ -28,6 +28,7 @@ import com.sk89q.worldedit.blocks.BaseItemStack;
 import com.sk89q.worldedit.command.argument.SelectorChoice;
 import com.sk89q.worldedit.command.tool.NavigationWand;
 import com.sk89q.worldedit.command.tool.SelectionWand;
+import com.sk89q.worldedit.command.tool.Tool;
 import com.sk89q.worldedit.command.util.CommandPermissions;
 import com.sk89q.worldedit.command.util.CommandPermissionsConditionGenerator;
 import com.sk89q.worldedit.command.util.Logging;
@@ -285,11 +286,19 @@ public class SelectionCommands {
 
     @Command(
         name = "/wand",
-        desc = "Get the wand object"
+        desc = "Get the wand item",
+        descFooter = "You must have also have permission to use at least one of the"
+            + " features of the requested wand."
     )
     @CommandPermissions("worldedit.wand")
     public void wand(Player player, LocalSession session,
-                        @Switch(name = 'n', desc = "Get a navigation wand") boolean navWand) throws WorldEditException {
+                     @Switch(name = 'n', desc = "Get a navigation wand")
+                         boolean navWand) throws WorldEditException {
+        Tool tool = navWand ? new NavigationWand() : new SelectionWand();
+        if (!tool.canUse(player)) {
+            player.printError(TranslatableComponent.of("worldedit.command.permissions"));
+            return;
+        }
         String wandId = navWand ? session.getNavWandItem() : session.getWandItem();
         if (wandId == null) {
             wandId = navWand ? we.getConfiguration().navigationWand : we.getConfiguration().wandItem;
@@ -300,30 +309,27 @@ public class SelectionCommands {
             return;
         }
         player.giveItem(new BaseItemStack(itemType, 1));
-        if (navWand) {
-            session.setTool(itemType, new NavigationWand());
-            player.printInfo(TranslatableComponent.of("worldedit.wand.navwand.info"));
-        } else {
-            session.setTool(itemType, new SelectionWand());
-            player.printInfo(TranslatableComponent.of("worldedit.wand.selwand.info"));
-        }
+        session.setTool(itemType, tool);
+        player.printInfo(TranslatableComponent.of("worldedit.wand." + (navWand ? "nav" : "sel" ) + "wand.info"));
     }
 
     @Command(
         name = "toggleeditwand",
-        desc = "Remind the user that the wand is now a tool and can be unbound with /none."
+        desc = "Remind the user that the wand is now a tool and can be unbound with /tool none."
     )
     @CommandPermissions("worldedit.wand.toggle")
     public void toggleWand(Player player) {
-        player.printInfo(TextComponent.of("The selection wand is now a normal tool. You can disable it with ")
-                .append(TextComponent.of("/none", TextColor.AQUA).clickEvent(
-                        ClickEvent.of(ClickEvent.Action.RUN_COMMAND, "/none")))
-                .append(TextComponent.of(" and rebind it to any item with "))
-                .append(TextComponent.of("//selwand", TextColor.AQUA).clickEvent(
-                        ClickEvent.of(ClickEvent.Action.RUN_COMMAND, "//selwand")))
-                .append(TextComponent.of(" or get a new wand with "))
-                .append(TextComponent.of("//wand", TextColor.AQUA).clickEvent(
-                        ClickEvent.of(ClickEvent.Action.RUN_COMMAND, "//wand"))));
+        player.printInfo(
+            TranslatableComponent.of(
+                "worldedit.wand.selwand.now.tool",
+                TextComponent.of("/tool none", TextColor.AQUA).clickEvent(
+                    ClickEvent.of(ClickEvent.Action.RUN_COMMAND, "/tool none")),
+                TextComponent.of("/tool selwand", TextColor.AQUA).clickEvent(
+                    ClickEvent.of(ClickEvent.Action.RUN_COMMAND, "/tool selwand")),
+                TextComponent.of("//wand", TextColor.AQUA).clickEvent(
+                    ClickEvent.of(ClickEvent.Action.RUN_COMMAND, "//wand"))
+            )
+        );
     }
 
     @Command(
